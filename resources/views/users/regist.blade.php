@@ -74,6 +74,10 @@
           <dt><span class="required">必須</span> 市区町村以降の住所</dt>
           <dd><input type="text" class="input" name="address" value="{{ old('address') }}"></dd>
         </dl>
+        <dl class="dl dl--form">
+          <dt><span class="required"> ファンクラブ会員No.</dt>
+          <dd><input type="text" class="input" name="memo" value="{{ old('memo') }}"></dd>
+        </dl>
 
         <div class="privacy__wrap u-mt-40">
           <p>

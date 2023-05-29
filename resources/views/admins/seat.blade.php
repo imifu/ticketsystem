@@ -104,7 +104,7 @@
 
                         <div class="form-group row">
                             <label class="col-form-label col-lg-3">販売枚数 <span class="text-danger">*</span></label>
-                            <div class="col-lg-1">
+                            <div class="col-lg-2">
 
                                 <div class="input-group">
                                     <input type="number" name="ticket_amount" class="form-control" required placeholder="50" value="{{ old('ticket_amount' , !empty($data['ticket_amount']) ? $data['ticket_amount'] : null ) }}">
@@ -120,6 +120,20 @@
                                 <strong>現在：{{ $sold_tickets }}枚</strong>
                             </div>
                             @endif
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">一人あたりの購入制限枚数（0は無制限） <span class="text-danger">*</span></label>
+                            <div class="col-lg-2">
+
+                            <div class="input-group">
+                                <input type="number" name="limit_sale" class="form-control" required placeholder="0" value="{{ old('limit_sale' , !empty($data['limit_sale']) ? $data['limit_sale'] : null ) }}">
+                                <div class="input-group-append">
+                                  <button type="button" class="btn btn-light">枚</button>
+                                </div>
+                            </div>
+                               
+                            </div>
                         </div>
 
                         <div class="form-group row">
@@ -142,7 +156,7 @@
                             <div class="col-lg-9">
                                 <div class="form-check form-check-inline">
                                     <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" name="sold_out_flg" value="0" {{ !empty($data['sold_out_flg']) && $data["sold_out_flg"] == "0" ? 'checked' : '' }} />売り切れOFF
+                                        <input type="radio" class="form-check-input" name="sold_out_flg" value="0" {{ isset($data["sold_out_flg"]) && $data["sold_out_flg"] == "0" ? 'checked' : '' }} />売り切れOFF
                                     </label>
                                 </div>
                                 <div class="form-check form-check-inline">

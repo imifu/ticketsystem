@@ -29,6 +29,8 @@ class Ticket extends Model
         'close_date',
         'open_time',
         'close_time',
+        'open_date_text',
+        'receive_date_text',
         'owner_name',
         'live_name',
         'place_name',

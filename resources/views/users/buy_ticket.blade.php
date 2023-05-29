@@ -14,10 +14,16 @@
     </div>
   @endif
 
-
-
   @if(!empty($data))
   <div class="container">
+
+    @if ($errors->any())
+      @foreach ($errors->all() as $error_mes)
+        <div class="u-mb-56">
+          <div class="error_messages">・{{$error_mes}}</div>
+        </div>
+      @endforeach
+    @endif
 
     <form action="{{ route('users.buyTicketConfirm') }}" method="POST">
       @csrf
@@ -49,17 +55,43 @@
         </div>
       </div>
 
+
+      <div class="u-mb-56">
+        <dl class="dl dl--form">
+          <dt><span class="required">重要</span> 購入枚数</dt>
+          <dd class="payment__select">
+            <select name="buy_num" class="input">
+              <option value="" selected>選択してください {{ !empty($data->limit_sale) ? "※ お一人様 ".$data->limit_sale." 枚まで" : null }}</option>
+
+                @php
+
+                  $limit_num = !empty($data->limit_sale) ? $data->limit_sale : 10;
+
+                @endphp
+
+                @for($i = 1; $i <= $limit_num; $i++)
+                  <option value="{{ $i }}" >{{ $i }} 枚</option>
+                @endfor
+            </select>
+          </dd>
+        </dl>
+      </div>
+
       <div class="u-mb-56">
         <h2 class="heading1">決済方法を選択してください</h2>
         <div class="payment__radio">
           <label for="radio-1">
-            <input type="radio" name="payment_flg" value="1" id="radio-1">
+            <input type="radio" name="payment_flg" value="1" id="radio-1" checked>
             <span><img src="{{ asset('assets/images/icon_card.svg') }}" alt=""> {{ config('payment_flg.1') }}</span>
           </label>
+
+          <?php /*
           <label for="radio-2">
             <input type="radio" name="payment_flg" value="2" id="radio-2">
             <span><img src="{{ asset('assets/images/icon_convinience.svg') }}" alt=""> {{ config('payment_flg.2') }}</span>
           </label>
+          */ ?>
+          
         </div>
       </div>
 

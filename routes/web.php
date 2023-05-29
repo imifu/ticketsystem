@@ -126,6 +126,8 @@ Route::middleware('auth:admins')->group(function(){
     Route::get('/kdMsAsj3U2b8/payments', [App\Http\Controllers\AdminsController::class, 'payments'])->name('admin.payments');
     Route::get('/kdMsAsj3U2b8/paymentSearch', [App\Http\Controllers\AdminsController::class, 'payments'])->name('admin.paymentSearch');
 
+    Route::get('/kdMsAsj3U2b8/paymentsDelete/{id}/{user_ticket_id}', [App\Http\Controllers\AdminsController::class, 'paymentsDelete'])->name('admin.paymentsDelete');
+
     Route::get('/kdMsAsj3U2b8/qr', [App\Http\Controllers\AdminsController::class, 'qr_reader'])->name('admin.qr');
     Route::get('/kdMsAsj3U2b8/come_live/', [App\Http\Controllers\AdminsController::class, 'come_live'])->name('admin.come_live');
     Route::get('/kdMsAsj3U2b8/come_live/{str}', [App\Http\Controllers\AdminsController::class, 'come_live'])->name('admin.come_live_function');

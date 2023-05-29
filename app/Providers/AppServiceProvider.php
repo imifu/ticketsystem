@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+
+use DB;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        DB::listen(function ($query) {
+            \Log::info("Query Time:{$query->time}s] $query->sql");
+        });
     }
 }

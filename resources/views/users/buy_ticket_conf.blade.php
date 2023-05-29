@@ -45,8 +45,13 @@
       </div>
 
       <div class="u-mb-56">
+        <h2 class="heading1">購入枚数</h2>
+        <p>{{ $data['buy_num'] }} 枚　<span class="link u-fw-b" onclick="history.back()">変更する</span></p>
+      </div>
+
+      <div class="u-mb-56">
         <h2 class="heading1">決済方法</h2>
-        <p>{{ config('payment_flg.'.$data["payment_flg"]) }}　<span class="link u-fw-b" onclick="history.back()">変更する</span></p>
+        <p>{{ config('payment_flg.'.$data["payment_flg"]) }}　<!-- <span class="link u-fw-b" onclick="history.back()">変更する</span> --></p>
       </div>
 
       <div class="privacy__wrap">
@@ -81,11 +86,12 @@
       @csrf
       <input type="hidden" name="ticket_detail_id" value="{{ $ticket_data->ticket_detail_id }}">
       <input type="hidden" name="ticket_amount" value="{{ $ticket_data->amount }}">
+      <input type="hidden" name="ticket_buy_num" value="{{ $data['buy_num'] }}">
 
       <script
             src="https://checkout.stripe.com/checkout.js" class="stripe-button"
             data-key="{{ env('STRIPE_PUBLIC_KEY') }}"
-            data-amount="{{ $ticket_data->amount }}"
+            data-amount="{{ $ticket_data->amount * $data['buy_num'] }}"
             data-name="{{ $ticket_data->ticket_name }}"
             data-email="{{ $auth_user->email }}"
             data-label="決済"

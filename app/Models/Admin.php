@@ -19,6 +19,7 @@ class Admin extends User
         'name',
         'email',
         'password',
+        'admin_flg',
         'email_verified_at'
     ];
 

@@ -32,7 +32,9 @@ class PagesController extends Controller
         ->whereRaw('tickets.show_to >= NOW()')
 
         ->where('tickets.show_flg', '=', '1')
-        ->where('tickets.sold_out_flg', '=', '0')
+
+        // 売り切れのも表示
+        // ->where('tickets.sold_out_flg', '=', '0')
 
         ->orderBy('tickets.show_from', 'ASC')
         ->get();
@@ -44,7 +46,8 @@ class PagesController extends Controller
         ->whereRaw('tickets.show_to >= NOW()')
 
         ->where('tickets.show_flg', '=', '1')
-        ->where('tickets.sold_out_flg', '=', '0')
+
+        // ->where('tickets.sold_out_flg', '=', '0')
 
         ->orderBy('tickets.open_date', 'ASC')
         ->paginate(10);
@@ -52,7 +55,7 @@ class PagesController extends Controller
         // お知らせデータを3件取得
         $news_datas = News::where('news.del_flg', '=', '0')
         ->orderBy('news.updated_at', 'DESC')
-        ->limit(2)
+        ->limit(3)
         ->get();
 
 

@@ -42,6 +42,10 @@
           <dt><span class="required">必須</span> 市区町村以降の住所</dt>
           <dd>{{ $data["address"] }}</dd>
         </dl>
+        <dl class="dl dl--form">
+          <dt><span class="required"> ファンクラブ会員No.</dt>
+          <dd>{{ $data["memo"] }}</dd>
+        </dl>
 
         <div class="btn__wrap">
           <button class="btn" type="submit" name="submit">この内容で登録する</button>

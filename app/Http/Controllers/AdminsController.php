@@ -12,6 +12,8 @@ use App\Models\News;
 use App\Models\Ticket;
 use App\Models\TicketDetail;
 use App\Models\UserTicket;
+use App\Models\PaymentData;
+use App\Models\PaymentLog;
 
 use App\Http\Requests\AdminRequest;
 use App\Http\Requests\NewsRequest;
@@ -67,6 +69,7 @@ class AdminsController extends Controller
             [
               'name' => $req->name,
               'email' => $req->email,
+              'admin_flg' => $req->admin_flg,
               'email_verified_at' => date("Y-m-d H:i:s"),
               'password' => bcrypt($req->password),
             ]
@@ -140,12 +143,37 @@ class AdminsController extends Controller
 
 
     // ユーザーデータ一覧のページ
-    public function users() {
+    public function users(Request $req) {
 
         //usersテーブルから50件ずつデータを取得
-        $datas = User::orderBy("created_at", "DESC")->paginate(50);
 
-        return view('admins.users', ['datas' => $datas]);
+        if(!empty($req)) {
+
+            $datas = User::where('del_flg', "0")
+
+            // 名前検索
+            ->where(function ($query) use ($req) {
+                $query->where('first_name', 'LIKE', "%".$req->name."%")
+                    ->orWhere('last_name', 'LIKE', "%".$req->name."%");
+            })
+
+            // メールアドレス検索
+            ->where(function ($query) use ($req) {
+                $query->where('email', 'LIKE', "%".$req->email."%");
+            })
+
+            ->orderBy("created_at", "DESC")
+            ->paginate(50);
+
+        } else {
+
+            $datas = User::orderBy("created_at", "DESC")
+            ->where('del_flg', "0")
+            ->paginate(50);
+        }
+        
+
+        return view('admins.users', ['datas' => $datas, 'param' => $req->all()]);
     }
 
     // ユーザーデータの詳細/編集ページ
@@ -177,6 +205,7 @@ class AdminsController extends Controller
               'post_code' => $req->post_code,
               'pref' => $req->pref,
               'address' => $req->address,
+              'memo' => $req->memo,
             ]
         );
 
@@ -241,6 +270,8 @@ class AdminsController extends Controller
               'receive_to' => $req->receive_to,
               'open_date' => $req->open_date,
               'close_date' => $req->close_date,
+              'open_date_text' => $req->open_date_text,
+              'receive_date_text' => $req->receive_date_text,
               'owner_name' => $req->owner_name,
               'live_name' => $req->live_name,
               'place_name' => $req->place_name,
@@ -324,6 +355,7 @@ class AdminsController extends Controller
               'amount' => $req->amount,
               'ticket_amount' => $req->ticket_amount,
               'sold_out_flg' => $req->sold_out_flg,
+              'limit_sale' => $req->limit_sale,
             ]
         );
 
@@ -414,11 +446,15 @@ class AdminsController extends Controller
         $datas = UserTicket::join('payment_logs', 'payment_logs.user_ticket_id', '=', 'user_tickets.id')
         ->join('tickets', 'tickets.id', '=', 'user_tickets.ticket_id')
         ->join('ticket_details', 'ticket_details.id', '=', 'user_tickets.ticket_detail_id')
+        ->join('users', 'users.id', '=', 'user_tickets.user_id')
+
         ->where('user_tickets.del_flg', "=", '0')
         ->where('payment_logs.del_flg', "=", '0')
 
         ->whereRaw("payment_logs.payment_date >= '{$from_date}'")
         ->whereRaw("payment_logs.payment_date <= '{$to_date}'")
+
+        ->select('payment_logs.*', 'user_tickets.*', 'tickets.*', 'users.*','ticket_details.*', 'payment_logs.id as payment_log_id', 'user_tickets.id as user_ticket_id')
 
         ->orderBy('payment_logs.updated_at', 'DESC')
         ->get();
@@ -442,6 +478,24 @@ class AdminsController extends Controller
      );
     }
 
+
+    public function paymentsDelete($id, $user_ticket_id) {
+
+
+        $data = PaymentLog::find($id);
+
+        $data["del_flg"] = config("const.SAKUJYO_ZUMI");
+        $data->save();
+
+        $data = UserTicket::find($user_ticket_id);
+
+        $data["del_flg"] = config("const.SAKUJYO_ZUMI");
+        $data->save();
+
+        return redirect(route("admin.payments"));
+        
+    }
+
     public function enterSeatSearch(Request $req) {
 
         $selects = Ticket::orderBy("created_at", "DESC")->get();
@@ -450,7 +504,7 @@ class AdminsController extends Controller
 
         ->where('user_tickets.ticket_id', "=", $req->ticket_id)
 
-        ->select('*', 'user_tickets.id as user_ticket_id')
+        ->select('*', 'user_tickets.id as user_ticket_id', 'user_tickets.created_at as buy_created_at')
 
         ->join('users', 'users.id', '=', 'user_tickets.user_id')
         ->join('tickets', 'tickets.id', '=', 'user_tickets.ticket_id')
@@ -467,8 +521,11 @@ class AdminsController extends Controller
                     "buy_id" => $data->user_ticket_id,
                     "seat_name" => $data->seat,
                     "user_name" => $data->last_name." ".$data->first_name,
+                    "ticket_name" => $data->ticket_name,
                     "amount" => $data->amount,
-                    "buy_date" => $data->created_at,
+                    "buy_date" => $data->buy_created_at,
+                    "memo" => $data->memo,
+                    
                 );
 
                 array_push($returns, $arr);
@@ -477,7 +534,7 @@ class AdminsController extends Controller
         }
 
         // カラムの作成
-        $head = ['購入ID', '席名', '購入者',  '購入金額', '購入日時'];
+        $head = ['購入ID', '席名', '購入者', 'チケット名', '購入金額', '購入日時' , 'ファンクラブNo'];
 
         // 書き込み用ファイルを開く
         

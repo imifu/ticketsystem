@@ -18,8 +18,11 @@
 金額
 {{ number_format($params["amount"]) }}円
 
+枚数
+{{ $params["ticket_buy_num"] }}枚
+
 開催日時
-{{ date('Y/m/d', strtotime($params["open_date"])) }}({{ config('week_name.'.date('w', strtotime($params["open_date"]))) }}){{ date('H:i', strtotime($params["open_date"])) }}
+{{ date('Y/m/d', strtotime($params["open_date"])) }}({{ config('week_name.'.date('w', strtotime($params["open_date"]))) }})
 
 開催場所
 {{ $params["place_name"] }}

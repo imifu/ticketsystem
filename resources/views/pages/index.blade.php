@@ -23,6 +23,46 @@
       @if(!empty($datas))
 
         @foreach($datas as $key => $data)
+
+
+        @php
+            
+          $now = date("Y-m-d H:i:s");
+          $target = date("Y-m-d H:i:s", strtotime($data->receive_from));
+          $target2 = date("Y-m-d H:i:s", strtotime($data->receive_to));
+
+          $link_str = "";
+          $link_href = "";
+
+
+          if($target <= $now && $now <= $target2) {
+
+            $link_href = route('page.ticket', ['id' => $data->id]);
+            $link_str = "選択する";
+
+          } else {
+
+
+
+            if($target > $now) {
+
+              $link_href = 'javascript:return false;';
+              $link_str = "販売前";
+
+            } else if($now > $target2) {
+
+              $link_href = 'javascript:return false;';
+              $link_str = "受付終了";
+
+            }
+
+          }
+
+          
+
+        @endphp
+
+
         <li class="ticket__item">
           <a href="{{ route('page.ticket', ['id' => $data->id]) }}">
             <time class="ticket__item__date" datetime="{{ date('Y-m-d', strtotime($data->show_from)) }}">
@@ -38,7 +78,7 @@
                 {{ date('Y/m/d', strtotime($data->receive_to)) }}({{ config('week_name.'.date('w', strtotime($data->receive_to))) }}){{ date('H:i', strtotime($data->receive_to)) }}</p>
               <p class="ticket__item__place">開催場所: {{ $data->place_name }}</p>
             </div>
-            <div class="ticket__item__choice">選択する</div>
+            <div class="ticket__item__choice">{{ $link_str }}</div>
           </a>
         </li>
         @endforeach
@@ -76,7 +116,7 @@
         @foreach($news_datas as $n_key => $news)
         <li class="news__item">
           <a href="{{ route('page.newsdetail',['id' => $news->id]) }}">
-            <time class="news__item__date" datetime="{{ date('Y-m-d', strtotime($data->created_at)) }}">{{ date('Y/m/d', strtotime($data->created_at)) }}({{ config('week_name.'.date('w', strtotime($data->created_at))) }})</time>
+            <time class="news__item__date" datetime="{{ date('Y-m-d', strtotime($news->created_at)) }}">{{ date('Y/m/d', strtotime($news->created_at)) }}({{ config('week_name.'.date('w', strtotime($news->created_at))) }})</time>
             <p class="news__item__ttl">{{ $news->title }}</p>
           </a>
         </li>

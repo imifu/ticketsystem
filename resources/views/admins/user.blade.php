@@ -129,6 +129,13 @@
 								</div>
 							</div>
 
+							<div class="form-group row">
+								<label class="col-form-label col-lg-3">ファンクラブ会員No.</label>
+								<div class="col-lg-2">
+								<input type="text" name="memo" class="form-control" required placeholder="" value="{{ old('memo' ,!empty($data['memo']) ? $data['memo'] : null) }}">
+								</div>
+							</div>
+
 
 						<div class="d-flex justify-content-end align-items-center">
 							<button type="reset" class="btn btn-light" id="reset">リセット <i class="icon-reload-alt ml-2"></i></button>

@@ -19,34 +19,53 @@
       <div class="u-mb-40">
         <h3 class="heading2">開催日時</h3>
         <p>
-          {{ date('Y/m/d', strtotime($data->open_date)) }}({{ config('week_name.'.date('w', strtotime($data->open_date))) }}){{ date('H:i', strtotime($data->open_date)) }}
-          〜
-          {{ date('Y/m/d', strtotime($data->close_date)) }}({{ config('week_name.'.date('w', strtotime($data->close_date))) }}){{ date('H:i', strtotime($data->close_date)) }}
+
+          @if(empty($data->open_date_text))
+
+            {{ date('Y/m/d', strtotime($data->open_date)) }}({{ config('week_name.'.date('w', strtotime($data->open_date))) }}){{ date('H:i', strtotime($data->open_date)) }}
+            〜
+            {{ date('Y/m/d', strtotime($data->close_date)) }}({{ config('week_name.'.date('w', strtotime($data->close_date))) }}){{ date('H:i', strtotime($data->close_date)) }}
+        
+          @else
+
+            {!! nl2br($data->open_date_text) !!}
+
+          @endif
+        
         </p>
       </div>
 
       <div class="u-mb-40">
         <h3 class="heading2">販売期間</h3>
         <p>
-          {{ date('Y/m/d', strtotime($data->receive_from)) }}({{ config('week_name.'.date('w', strtotime($data->receive_from))) }}){{ date('H:i', strtotime($data->receive_from)) }}
-          〜
-          {{ date('Y/m/d', strtotime($data->receive_to)) }}({{ config('week_name.'.date('w', strtotime($data->receive_to))) }}){{ date('H:i', strtotime($data->receive_to)) }}
-        </p>
+
+          @if(empty($data->open_date_text))
+
+            {{ date('Y/m/d', strtotime($data->receive_from)) }}({{ config('week_name.'.date('w', strtotime($data->receive_from))) }}){{ date('H:i', strtotime($data->receive_from)) }}
+            〜
+            {{ date('Y/m/d', strtotime($data->receive_to)) }}({{ config('week_name.'.date('w', strtotime($data->receive_to))) }}){{ date('H:i', strtotime($data->receive_to)) }}
+        
+          @else
+
+           {!! nl2br($data->receive_date_text) !!}
+
+          @endif
+         </p>
       </div>
 
       <div class="u-mb-40">
         <h3 class="heading2">開催場所</h3>
-        <p>{{ $data->place_name }}</p>
+        <p>{!! nl2br($data->place_name) !!}</p>
       </div>
 
       <div class="u-mb-40">
         <h3 class="heading2">会場情報</h3>
-        <p>{{ $data->place }}</p>
+        <p>{!! nl2br($data->place) !!}</p>
       </div>
 
       <div class="u-mb-40 u-pb-40 u-bb">
         <h3 class="heading2">詳細</h3>
-        <p>{{ $data->ticket_explain }}</p>
+        <p>{!! nl2br($data->ticket_explain) !!}</p>
       </div>
 
       <div class="u-mb-40">
@@ -60,7 +79,27 @@
 
               @foreach($ticket_details as $ticket_details_key => $ticket_detail)
 
+                  @php
+
+                    $now = date("Y-m-d H:i:s");
+                    $target = date("Y-m-d H:i:s", strtotime($data->receive_from));
+                    $target2 = date("Y-m-d H:i:s", strtotime($data->receive_to));
+
+
+                    if($target <= $now && $now <= $target2) {
+
+                    } else {
+
+                      continue;
+                      
+                    }
+
+
+                  @endphp
+
+
                   @if($ticket_detail->sold_out_flg == 0)
+
                   <li class="sheet__item">
                     <a class="sheet__item__inner" href="{{ route('users.buyTicket', ['id' => $ticket_detail->id]) }}">
                       <div class="sheet__item__status sheet__item__status--onsale">発売中</div>
@@ -68,6 +107,7 @@
                       <p class="sheet__item__choice">選択する</p>
                     </a>
                   </li>
+
                   @else
                   <li class="sheet__item">
                     <div class="sheet__item__inner">

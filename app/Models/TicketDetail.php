@@ -17,7 +17,8 @@ class TicketDetail extends Model
         'ticket_name',
         'amount',
         'ticket_amount',
-        'sold_out_flg'
+        'sold_out_flg',
+        'limit_sale'
     ];
 
     protected $hidden = [

@@ -21,6 +21,8 @@
 
 <!-- Main -->
 
+@if(Auth::user()->admin_flg == 0)
+
 <li class="nav-item nav-item-submenu">
   <a href="#" class="nav-link"><i class="icon-lock"></i> <span>管理者 管理</span></a>
 
@@ -62,6 +64,8 @@
 <li class="nav-item">
   <a href="{{ route('admin.payments') }}" id="" class="nav-link"><i class="icon-coins"></i> <span>売上ログ</span></a>
 </li>
+
+@endif
 
 <li class="nav-item">
   <a href="{{ route('admin.qr') }}" id="" class="nav-link qrcode_href"><i class="icon-qrcode" id=""></i> <span>QRコードリーダー</span></a>

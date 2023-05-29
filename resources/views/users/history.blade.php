@@ -46,28 +46,61 @@
           <div class="ticket__detail">
             <h2 class="heading1">チケットのご利用方法</h2>
             <div class="flow">
-              <h3 class="heading2">STEP.1 見出しテキスト</h3>
-              <p class="u-mb-16">テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
+              <h3 class="heading2">QRコードの表示</h3>
+              <p class="u-mb-16">ログイン後マイページのチケット購入履歴で確認ができます。</p>
               <img src="./assets/images/sample/flow.png" alt="">
             </div>
             <div class="flow">
-              <h3 class="heading2">STEP.2 見出しテキスト</h3>
-              <p class="u-mb-16">テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
+              <h3 class="heading2">QRコードの使用方法</h3>
+              <p class="u-mb-16">当日、会場でQRコードの確認を致します。QRコードをご用意の上ご来場ください。<br />確認後、席情報がマイページに掲載されます。</p>
               <img src="./assets/images/sample/flow.png" alt="">
             </div>
+
+            <!--
             <div class="flow">
               <h3 class="heading2">STEP.3 見出しテキスト</h3>
               <p class="u-mb-16">テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
               <img src="./assets/images/sample/flow.png" alt="">
             </div>
+            -->
+
           </div>
 
           <div class="ticket__qr">
             <h2 class="heading1">QRコード</h2>
             <div class="flow">
               <p class="u-mb-16">
-                {!! QrCode::size(300)->generate($data->qr_code) !!}
+
+                @php
+
+                $now = date("Y-m-d H:i:s");
+
+                $target_date_ins = new DateTime($data->open_date);
+                $target_date = $target_date_ins->modify("-1 day")->format("Y-m-d H:i:s");
+
+                if($now > $target_date) {
+
+                  echo '<p class="u-mb-16">チケット番号：'.$data->user_ticket_id."</p>"; 
+
+                  if($data->come_flg == 1) {
+
+                    echo '<p class="u-mb-16">座席番号：'.$data->seat."</p>";
+
+                  }
+
+                  echo QrCode::size(300)->generate($data->qr_code);
+
+                  
+                  
+                } else {
+                  echo "チケットのQRコードは開催時間の24時間前から表示できます。";
+                }
+
+
+                @endphp
+
               </p>
+
               <img src="./assets/images/sample/flow.png" alt="">
             </div>
           </div>

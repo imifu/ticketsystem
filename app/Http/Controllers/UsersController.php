@@ -21,6 +21,8 @@ use App\Models\PaymentData;
 use App\Models\PaymentLog;
 
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserBuyTicketRequest;
+
 
 use App\Mail\UserRegistMail;
 use App\Mail\UserBuyTicketMail;
@@ -70,6 +72,7 @@ class UsersController extends Controller
                 'post_code' => $req->post_code,
                 'pref' => $req->pref,
                 'address' => $req->address,
+                'memo' => $req->memo,
             ]
         );
 
@@ -103,6 +106,11 @@ class UsersController extends Controller
         $datas = UserTicket::where('user_tickets.user_id', $user->id)
         ->join('tickets', 'tickets.id', '=', 'user_tickets.ticket_id')
         ->join('ticket_details', 'ticket_details.id', '=', 'user_tickets.ticket_detail_id')
+
+        ->select('*', 'user_tickets.id as user_ticket_id')
+
+        ->where('user_tickets.del_flg', '=', '0')
+
         ->orderBy('user_tickets.created_at', 'DESC')
         ->get();
 
@@ -187,7 +195,7 @@ class UsersController extends Controller
 
 
     // チケット購入データの確認
-    public function buyTicketConfirm(Request $request) {
+    public function buyTicketConfirm(UserBuyTicketRequest $request) {
 
         $data = $request->all();
 
@@ -231,11 +239,36 @@ class UsersController extends Controller
 
         // }
 
-
-
         if(empty($ticket_data)) {
-            return view('users.no_ticket');
+            return view('users.no_ticket', ['msg' => '該当のチケットは現在販売中ではありません。']);
         }
+
+        // 一人あたりの購入制限枚数が存在する場合の処置
+        if(!empty($ticket_data["limit_sale"])) {
+
+            $user = Auth::user();
+
+            $limit = $ticket_data["limit_sale"];
+
+            $sold_tickets = UserTicket::where('ticket_detail_id', $ticket_data->ticket_detail_id)
+            ->where('user_id', "=", $user->id)
+            ->where('valid_flg', "=", 1)
+            ->where('del_flg', "=", 0)
+            ->get()->count();
+
+            if($limit <= $sold_tickets) {
+                return view('users.no_ticket', ['msg' => '該当のチケットは既に規定の販売枚数を購入している為購入ができません。']);
+            }
+
+            if($limit < $sold_tickets + $data["buy_num"]) {
+                return view('users.no_ticket', ['msg' => '該当のチケットを'.$sold_tickets.'枚購入している為、'.$data["buy_num"].'枚購入することができません。一人あたり購入可能な枚数は'.$limit.'枚です']);
+            }
+
+        }
+
+
+
+
 
         // 在庫計算
         $stock = $ticket_data->ticket_amount;
@@ -254,7 +287,13 @@ class UsersController extends Controller
             $ticket_detail->sold_out_flg = 1;
             $ticket_detail->update();
 
-            return view('users.no_ticket');
+            return view('users.no_ticket', ['msg' => '該当のチケットは売り切れの為、新しくご購入頂くことができません。']);
+        }
+
+
+        // 複数購入による売り切れの場合
+        if($stock < $sold_tickets + $data["buy_num"]) {
+            return view('users.no_ticket', ['msg' => '該当のチケットは'.$data["buy_num"].'枚分の在庫がありません。']);
         }
         
 
@@ -267,6 +306,9 @@ class UsersController extends Controller
     public function buyTicketComp(Request $req) {
 
         $data = $req->all();
+
+        // var_dump($data);
+        // exit;
 
         if(empty($req->ticket_detail_id)) {
             return redirect(route("page.index"));
@@ -290,7 +332,7 @@ class UsersController extends Controller
         ->first();
 
         if(empty($ticket_data)) {
-            return view('users.no_ticket');
+            return view('users.no_ticket', ['msg' => '該当のチケットは現在販売中ではありません。']);
         }
 
         $user = Auth::user();
@@ -335,9 +377,19 @@ class UsersController extends Controller
                 // 適用された変更をデータベースに保存
                 DB::commit();
 
-                return view('users.no_ticket');
+                return view('users.no_ticket', ['msg' => '該当のチケットは売切のため、現在販売中ではありません。']);
 
-            } else if($stock == $sold_tickets + 1) {
+
+            // この枚数は残っていない
+            } else if($stock < $sold_tickets + $data["ticket_buy_num"]) {
+
+                DB::rollBack();
+
+                return view('users.no_ticket', ['msg' => '該当のチケットは'.$data["ticket_buy_num"].'枚分の在庫がありません。']);
+
+
+            // この枚数を購入するとちょうど売切
+            } else if($stock == $sold_tickets + $data["ticket_buy_num"]) {
 
                 // 売り切れフラグを立てる
                 $ticket_detail = TicketDetail::find($ticket_data->ticket_detail_id);
@@ -347,9 +399,9 @@ class UsersController extends Controller
 
 
             $payment_result = $stripe->charges->create([
-                'amount' => $ticket_data->amount,
+                'amount' => $ticket_data->amount * $data["ticket_buy_num"],
                 'currency' => 'jpy',
-                'source' => 'tok_mastercard',
+                'source' => $data["stripeToken"],
                 'description' => $ticket_data->title.'|サイト会員ID：'.$user->id."| 購入チケットID：".$data["ticket_detail_id"]."|email：".$user->email."|tel：".$user->tel,
             ]);
 
@@ -359,41 +411,50 @@ class UsersController extends Controller
                 return redirect(route("users.no_payment"));
             }
 
-            $user_ticket = new UserTicket;
-            $user_ticket->user_id = $user->id;
-            $user_ticket->ticket_id = $ticket_data->ticket_id;
-            $user_ticket->ticket_detail_id = $ticket_data->ticket_detail_id;
+
+            // 購入完了
+            // 購入した枚数分データをINSERTする
 
 
-            // 単一の復号化パスを取得
-            $ticket_hash = Hash::make($user->email.date("YmdHis").$user->id.$ticket_data->ticket_id.$ticket_data->ticket_detail_id);
-            $ticket_hash = str_replace("/", "_", $ticket_hash);
+            for($i = 1; $i <= $data["ticket_buy_num"]; $i++) {
 
-            $user_ticket->qr_code = $ticket_hash;
-            $user_ticket->amount = $user_ticket->ticket_id;
-            $user_ticket->valid_flg = 1;
-            $user_ticket->payment_flg = "1";
-            $user_ticket->seat = "未定";
-            $user_ticket->come_flg = 0;
-            $user_ticket->save();
+                $user_ticket = new UserTicket;
+                $user_ticket->user_id = $user->id;
+                $user_ticket->ticket_id = $ticket_data->ticket_id;
+                $user_ticket->ticket_detail_id = $ticket_data->ticket_detail_id;
 
-            $payment_log = new PaymentLog;
-            $payment_log->user_id = $user->id;
-            $payment_log->user_ticket_id = $user_ticket->id;
-            $payment_log->stripe_id = $payment_result["id"];
-            $payment_log->email = $user->email;
-            $payment_log->amount = $user_ticket->ticket_id;
-            $payment_log->payment_date = date("Y-m-d H:i:s");
-            $payment_log->save();
 
-            $payment_data = new PaymentData;
-            $payment_data->user_ticket_id = $user_ticket->id;
-            $payment_data->ticket_id = $ticket_data->ticket_id;
-            $payment_data->ticket_detail_id = $ticket_data->ticket_detail_id;
-            $payment_data->payment_log_id = $payment_log->id;
-            $payment_data->amount = $user_ticket->ticket_id;
-            $payment_data->payment_date = date("Y-m-d H:i:s");
-            $payment_data->save();
+                // 単一の復号化パスを取得
+                $ticket_hash = Hash::make($user->email.date("YmdHis").$i.$user->id.$ticket_data->ticket_id.$ticket_data->ticket_detail_id.$i);
+                $ticket_hash = str_replace("/", "_", $ticket_hash);
+
+                $user_ticket->qr_code = $ticket_hash;
+                $user_ticket->amount = $user_ticket->ticket_id;
+                $user_ticket->valid_flg = 1;
+                $user_ticket->payment_flg = "1";
+                $user_ticket->seat = "未定";
+                $user_ticket->come_flg = 0;
+                $user_ticket->save();
+
+                $payment_log = new PaymentLog;
+                $payment_log->user_id = $user->id;
+                $payment_log->user_ticket_id = $user_ticket->id;
+                $payment_log->stripe_id = $payment_result["id"];
+                $payment_log->email = $user->email;
+                $payment_log->amount = $user_ticket->ticket_id;
+                $payment_log->payment_date = date("Y-m-d H:i:s");
+                $payment_log->save();
+
+                $payment_data = new PaymentData;
+                $payment_data->user_ticket_id = $user_ticket->id;
+                $payment_data->ticket_id = $ticket_data->ticket_id;
+                $payment_data->ticket_detail_id = $ticket_data->ticket_detail_id;
+                $payment_data->payment_log_id = $payment_log->id;
+                $payment_data->amount = $user_ticket->ticket_id;
+                $payment_data->payment_date = date("Y-m-d H:i:s");
+                $payment_data->save();
+
+            }
 
             // トランザクション開始してからここまでのDB操作を適用
             DB::commit();
@@ -403,6 +464,9 @@ class UsersController extends Controller
             $params = $ticket_data;
             $params["name"] = $user->last_name." ".$user->first_name;
             $params["email"] = $user->email;
+            $params["amount"] = $params["amount"] * $data["ticket_buy_num"];
+            $params["ticket_buy_num"] = $data["ticket_buy_num"];
+
             Mail::send(new UserBuyTicketMail($params));
 
             return redirect(route("users.buyTicketThanks"));
@@ -434,7 +498,6 @@ class UsersController extends Controller
     public function noPayment() {
         return view('users.no_payment');
     }
-
 
 
 }

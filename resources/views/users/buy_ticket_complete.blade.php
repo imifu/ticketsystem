@@ -12,22 +12,23 @@
     <h2 class="heading1">チケットのご利用方法</h2>
 
     <div class="flow">
-      <h3 class="heading2">STEP.1 見出しテキスト</h3>
-      <p class="u-mb-16">テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
-      <img src="./assets/images/sample/flow.png" alt="">
+      <h3 class="heading2">QRコードの表示</h3>
+      <p class="u-mb-16">ログイン後マイページのチケット購入履歴で確認ができます。</p>
+      <!-- <img src="./assets/images/sample/flow.png" alt=""> -->
     </div>
-
     <div class="flow">
-      <h3 class="heading2">STEP.2 見出しテキスト</h3>
-      <p class="u-mb-16">テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
-      <img src="./assets/images/sample/flow.png" alt="">
+      <h3 class="heading2">QRコードの使用方法</h3>
+      <p class="u-mb-16">当日、会場でQRコードの確認を致します。QRコードをご用意の上ご来場ください。<br />確認後、席情報がマイページに掲載されます。</p>
+      <!-- <img src="./assets/images/sample/flow.png" alt=""> -->
     </div>
 
+    <!--
     <div class="flow">
       <h3 class="heading2">STEP.3 見出しテキスト</h3>
       <p class="u-mb-16">テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
       <img src="./assets/images/sample/flow.png" alt="">
     </div>
+-->
 
       <div class="btn__wrap">
         <a href="{{ route('page.index') }}" class="btn">トップページへ</a>

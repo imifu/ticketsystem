@@ -40,6 +40,7 @@
                 <th>ID</th>
                 <th>管理者名</th>
                 <th>メールアドレス</th>
+                <th>種別</th>
                 <th>作成日</th>
                 <th class="text-center" style="width: 20px;"><i class="icon-arrow-down12"></i></th>
               </tr>
@@ -52,7 +53,8 @@
                 </td>
                 <td><span class="text-default font-weight-semibold">{{ $data->name }}</span></td>
                 <td><span class="text-default font-weight-semibold">{{ $data->email }}</span></td>
-                <td><span class="text-muted">{{ $data->created_at }}</span></td>
+                <td><span class="text-default font-weight-semibold">{{ config('flg.ADMIN_FLG.'.$data->admin_flg) }}</span></td>
+                <td><span class="text-default font-weight-semibold">{{ $data->created_at }}</span></td>
                 <td class="text-center">
                   <div class="list-icons">
                     <div class="dropdown">

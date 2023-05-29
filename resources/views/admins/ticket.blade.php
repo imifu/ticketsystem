@@ -171,6 +171,25 @@
                         </div>
 
                         <div class="form-group row">
+                            <label class="col-form-label col-lg-3">ライブ会場開場時間～閉場時間<span class="text-danger">*</span></label>
+                            <div class="col-lg-2">
+                                <input type="text" id="timecale3_f" name="open_date" class="form-control required" required placeholder="開場時間" value="{{ old('open_date' , !empty($data['open_date']) ? $data['open_date'] : null ) }}">
+                            </div>
+
+                            <div class="col-lg-2">
+                                <input type="text" id="timecale3_t" name="close_date" class="form-control required" required placeholder="閉場時間" value="{{ old('close_date' , !empty($data['close_date']) ? $data['close_date'] : null ) }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">開催日時の情報 <span class="text-danger">*</span></label>
+                            <div class="col-lg-9">
+                                <textarea name="open_date_text" id="open_date_text" class="form-control" cols="30" rows="10">{{ old('open_date_text', !empty($data["open_date_text"]) ? $data["open_date_text"] : null) }}</textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
                             <label class="col-form-label col-lg-3">販売開始時間～終了時間<span class="text-danger">*</span></label>
                             <div class="col-lg-2">
                                 <input type="text" id="timecale2_f" name="receive_from" class="form-control required" required placeholder="販売開始時間" value="{{ old('receive_from' , !empty($data['receive_from']) ? $data['receive_from'] : null ) }}">
@@ -182,13 +201,9 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-form-label col-lg-3">ライブ会場開場時間～閉場時間<span class="text-danger">*</span></label>
-                            <div class="col-lg-2">
-                                <input type="text" id="timecale3_f" name="open_date" class="form-control required" required placeholder="開場時間" value="{{ old('open_date' , !empty($data['open_date']) ? $data['open_date'] : null ) }}">
-                            </div>
-
-                            <div class="col-lg-2">
-                                <input type="text" id="timecale3_t" name="close_date" class="form-control required" required placeholder="閉場時間" value="{{ old('close_date' , !empty($data['close_date']) ? $data['close_date'] : null ) }}">
+                            <label class="col-form-label col-lg-3">販売期間の情報 <span class="text-danger">*</span></label>
+                            <div class="col-lg-9">
+                                <textarea name="receive_date_text" id="receive_date_text" class="form-control" cols="30" rows="10">{{ old('receive_date_text', !empty($data["receive_date_text"]) ? $data["receive_date_text"] : null) }}</textarea>
                             </div>
                         </div>
 
@@ -249,7 +264,7 @@ $(function () {
 $(function () {
   $("#timecale1_t").datetimepicker(
     {
-        format:'Y-m-d H:59:59'
+        format:'Y-m-d H:00:00'
     }
   );
 });
@@ -264,7 +279,7 @@ $(function () {
 $(function () {
   $("#timecale2_t").datetimepicker(
     {
-        format:'Y-m-d H:59:59'
+        format:'Y-m-d H:00:00'
     }
   );
 });
@@ -279,7 +294,7 @@ $(function () {
 $(function () {
   $("#timecale3_t").datetimepicker(
     {
-        format:'Y-m-d H:59:59'
+        format:'Y-m-d H:00:00'
     }
   );
 });

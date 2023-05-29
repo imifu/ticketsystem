@@ -80,6 +80,25 @@
 							</div>
 							<!-- /repeat password -->
 
+
+							<div class="form-group row">
+                            <label class="col-lg-3 col-form-label">管理者種別 <span class="text-danger">*</span></label>
+                            <div class="col-lg-9">
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label">
+                                        <input type="radio" class="form-check-input" name="admin_flg" value="0" {{ isset($data['admin_flg']) && $data["admin_flg"] == "0" ? 'checked' : '' }} />
+										マスター
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label">
+                                        <input type="radio" class="form-check-input" name="admin_flg" value="1" {{ !empty($data['admin_flg']) && $data["admin_flg"] == "1" ? 'checked' : '' }} />
+										QRコード読取のみ
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
 						<div class="d-flex justify-content-end align-items-center">
 							<button type="reset" class="btn btn-light" id="reset">リセット <i class="icon-reload-alt ml-2"></i></button>
 							<button type="submit" class="btn btn-primary ml-3">保存 <i class="icon-checkmark-circle ml-2"></i></button>

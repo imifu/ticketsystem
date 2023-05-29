@@ -69,6 +69,8 @@
                         <th>座席チケット名</th>
                         <th>支払い方法</th>
                         <th>金額</th>
+                        <th>会員名</th>
+                        <th>購入者メールアドレス</th>
                         <th>決済日</th>
                         <th class="text-center" style="width: 20px;"><i class="icon-arrow-down12"></i></th>
                     </tr>
@@ -80,28 +82,28 @@
 
                     <tr>
                         <td>
-                        <span class="text-default font-weight-semibold">{{ $data->id }}</span>
+                        <span class="text-default font-weight-semibold">{{ $data->payment_log_id }}</span>
                         </td>
                         <td><span class="text-default font-weight-semibold">{{ $data->title }}</span></td>
                         <td><span class="text-default font-weight-semibold">{{ $data->ticket_name }}</span></td>
                         <td><span class="text-default font-weight-semibold">{{ config('payment_flg.'.$data->payment_flg) }}</span></td>
                         <td><span class="text-default font-weight-semibold">{{ number_format($data->amount) }} 円</span></td>
+                        <td><span class="text-default font-weight-semibold">{{ $data->last_name." ".$data->first_name }}</span></td>
+                        <td><span class="text-default font-weight-semibold">{{ $data->email }}</span></td>
                         <td><span class="text-default font-weight-semibold">{{ $data->payment_date }}</span></td>
 
-                        <!--
                         <td class="text-center">
-                        <div class="list-icons">
+                          <div class="list-icons">
                             <div class="dropdown">
-                            <a href="#" class="list-icons-item dropdown-toggle caret-0" data-toggle="dropdown"><i class="icon-menu7"></i></a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a href="{{ route('admin.detail', ['id' => $data->id] ); }}" class="dropdown-item"><i class="icon-pencil5"></i> 編集</a>
-                                <div class="dropdown-divider"></div>
-                                <a href="{{ route('admin.delete', ['id' => $data->id] ); }}" onclick="return confirm('削除しますか？');" class="dropdown-item text-danger"><i class="icon-trash"></i> アカウント削除</a>
+                              <a href="#" class="list-icons-item dropdown-toggle caret-0" data-toggle="dropdown"><i class="icon-menu7"></i></a>
+                              <div class="dropdown-menu dropdown-menu-right">
+                                <a href="{{ route('admin.paymentsDelete', ['id' => $data->payment_log_id, 'user_ticket_id' => $data->user_ticket_id] ); }}" onclick="return confirm('購入データが削除されます。よろしいですか？');" class="dropdown-item text-danger">
+                                <i class="icon-trash"></i> 購入を無効にする</a>
+                              </div>
                             </div>
-                            </div>
-                        </div>
+                          </div>
                         </td>
-                        -->
+
                     </tr>
                     @endforeach
                     <tr>
