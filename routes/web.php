@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/mypage/profileForm', [App\Http\Controllers\UsersController::class, 'profileForm'])->name('users.profile_change');
     Route::post('/mypage/profileConf', [App\Http\Controllers\UsersController::class, 'profileConf'])->name('users.profile_conf');
     Route::post('/mypage/profileComp', [App\Http\Controllers\UsersController::class, 'profileComp'])->name('users.profile_save');
-    
+
 
 
     Route::get('/buyTicket/{id}', [App\Http\Controllers\UsersController::class, 'buyTicket'])->name('users.buyTicket');
@@ -59,7 +59,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/buyTicketThanks', [App\Http\Controllers\UsersController::class, 'buyTicketThanks'])->name('users.buyTicketThanks');
 
     Route::get('/payment_error', [App\Http\Controllers\UsersController::class, 'noPayment'])->name('users.no_payment');
-    
+
 
 });
 
@@ -67,7 +67,7 @@ Route::middleware('auth')->group(function(){
 // 管理画面
 
 Route::view('/kdMsAsj3U2b8/login', 'admins/login');
-Route::view('/kdMsAsj3U2b8/register', 'admins/register');
+Route::view('/kdMsAsj3U2b8/register', 'admins/register'); // *
 
 Route::post('/kdMsAsj3U2b8/login', [App\Http\Controllers\admin\LoginController::class, 'login'])->name('admin.login');
 Route::post('kdMsAsj3U2b8/logout', [App\Http\Controllers\admin\LoginController::class,'logout'])->name('admin.logout');
@@ -121,7 +121,7 @@ Route::middleware('auth:admins')->group(function(){
 
     Route::get('/kdMsAsj3U2b8/sumally', [App\Http\Controllers\AdminsController::class, 'sumally'])->name('admin.sumally');
     Route::post('/kdMsAsj3U2b8/sumally', [App\Http\Controllers\AdminsController::class, 'sumallySearch'])->name('admin.sumallySearch');
-    
+
 
     Route::get('/kdMsAsj3U2b8/payments', [App\Http\Controllers\AdminsController::class, 'payments'])->name('admin.payments');
     Route::get('/kdMsAsj3U2b8/paymentSearch', [App\Http\Controllers\AdminsController::class, 'payments'])->name('admin.paymentSearch');
@@ -131,7 +131,7 @@ Route::middleware('auth:admins')->group(function(){
     Route::get('/kdMsAsj3U2b8/qr', [App\Http\Controllers\AdminsController::class, 'qr_reader'])->name('admin.qr');
     Route::get('/kdMsAsj3U2b8/come_live/', [App\Http\Controllers\AdminsController::class, 'come_live'])->name('admin.come_live');
     Route::get('/kdMsAsj3U2b8/come_live/{str}', [App\Http\Controllers\AdminsController::class, 'come_live'])->name('admin.come_live_function');
-    
+
 
 });
 

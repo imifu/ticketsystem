@@ -16,6 +16,7 @@ class TicketDetail extends Model
         'ticket_id',
         'ticket_name',
         'amount',
+        'commission',
         'ticket_amount',
         'sold_out_flg',
         'limit_sale'

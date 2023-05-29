@@ -36,7 +36,7 @@
 
 				<div class="card-body">
 					<p class="mb-4">販売チケットデータの内容</p>
-					
+
 
 					@if ($errors->any())
 						@foreach ($errors->all() as $error)
@@ -68,7 +68,7 @@
                         <div class="form-group row">
                             <label class="col-form-label col-lg-3">
                                 サムネイル画像①<br>推奨サイズ 700px x 312px　<span class="text-danger">*</span>
-                            
+
                             </label>
                             <div class="col-lg-9">
                                 <input type="file" name="image" class="form-control">

@@ -171,7 +171,7 @@ class AdminsController extends Controller
             ->where('del_flg', "0")
             ->paginate(50);
         }
-        
+
 
         return view('admins.users', ['datas' => $datas, 'param' => $req->all()]);
     }
@@ -244,7 +244,7 @@ class AdminsController extends Controller
 
         return view('admins.ticket', ['data' => $data]);
     }
-    
+
     //チケットデータの保存
     public function ticketSave(TicketRequest $req) {
 
@@ -347,12 +347,14 @@ class AdminsController extends Controller
     // 座席データの保存
     public function seatSave(SeatRequest $req) {
 
+
         TicketDetail::updateOrCreate(
             ['id' => $req->id],
             [
               'ticket_id' => $req->ticket_id,
               'ticket_name' => $req->ticket_name,
               'amount' => $req->amount,
+              'commission' => $req->commission,
               'ticket_amount' => $req->ticket_amount,
               'sold_out_flg' => $req->sold_out_flg,
               'limit_sale' => $req->limit_sale,
@@ -389,11 +391,11 @@ class AdminsController extends Controller
 
             ->where('ticket_details.del_flg', "=", '0')
             ->where('tickets.del_flg', "=", '0')
-            
+
             ->orderBy('ticket_details.created_at', 'DESC')
             ->paginate(50);
         }
-        
+
 
         return view('admins.seats_all',
         ['datas' => $datas]
@@ -409,28 +411,28 @@ class AdminsController extends Controller
         $image = $req->$column_name;
 
         if(empty($image)) {
-    
+
           $image = $req->$backup_name;
-    
+
         } else {
-    
+
           $dir = $dir_name;
 
           // アップロードされたファイル名を取得
           $file_name = $req->file($column_name)->getClientOriginalName();
-    
+
           $info = pathinfo($file_name);
-    
+
           $file_name = "ticket-".date("YmdHis").".".$info["extension"];
-    
+
           $req->file($column_name)->storeAs('public/'.$dir_name, $file_name);
-    
+
           $image = "storage/" . $dir . "/" . $file_name;
-    
+
         }
 
         return $image;
-        
+
     }
 
 
@@ -493,7 +495,7 @@ class AdminsController extends Controller
         $data->save();
 
         return redirect(route("admin.payments"));
-        
+
     }
 
     public function enterSeatSearch(Request $req) {
@@ -525,7 +527,7 @@ class AdminsController extends Controller
                     "amount" => $data->amount,
                     "buy_date" => $data->buy_created_at,
                     "memo" => $data->memo,
-                    
+
                 );
 
                 array_push($returns, $arr);
@@ -537,7 +539,7 @@ class AdminsController extends Controller
         $head = ['購入ID', '席名', '購入者', 'チケット名', '購入金額', '購入日時' , 'ファンクラブNo'];
 
         // 書き込み用ファイルを開く
-        
+
         $csvFileName = "ticket_seat".date("YmdHis").".csv";
         $write_name = "../public/assets/csvfiletticketparkticketpark/".$csvFileName;
         $f = fopen($write_name, 'w');
@@ -570,17 +572,17 @@ class AdminsController extends Controller
 
         $data = $req->all();
 
-        $tmp = mt_rand() . "." . $req->file('csv')->guessExtension(); 
+        $tmp = mt_rand() . "." . $req->file('csv')->guessExtension();
         $req->file('csv')->move(public_path() . "/tmp", $tmp);
         $filepath = public_path() . "/tmp/" . $tmp;
 
         // CSV取得
         $file = new \SplFileObject($filepath);
         $file->setFlags(
-            \SplFileObject::READ_CSV | 
+            \SplFileObject::READ_CSV |
                 \SplFileObject::READ_AHEAD |
                 \SplFileObject::SKIP_EMPTY |
-                \SplFileObject::DROP_NEW_LINE 
+                \SplFileObject::DROP_NEW_LINE
         );
         //各行を処理する
         foreach ($file as $key => $line) {
@@ -589,7 +591,7 @@ class AdminsController extends Controller
                 continue;
             }
 
-            $enc_line = mb_convert_encoding($line, 'UTF-8', 'SJIS'); 
+            $enc_line = mb_convert_encoding($line, 'UTF-8', 'SJIS');
 
             $data = UserTicket::find($enc_line[0]);
 
@@ -685,15 +687,15 @@ class AdminsController extends Controller
 
 
         if($data->come_flg == 1) {
-            
+
             $MSG .= "※ 再入場です ※<br />";
 
         } else if($data->come_flg == 0) {
-            
+
             $data->come_flg = 1;
             $data->save();
         }
-    
+
 
         echo $MSG."座席：".$data->seat."</h1>";
         exit;
