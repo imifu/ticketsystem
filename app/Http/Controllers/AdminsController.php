@@ -659,6 +659,25 @@ class AdminsController extends Controller
     }
 
 
+    //メルマガ送信先検索ページ
+    public function mail_magazine_search() {
+
+        $datas = User::where('del_flg', "=", '0')->orderBy("created_at", "DESC")->paginate(100);
+
+        return view('admins.mail_magazine_search',
+        [
+            'datas' => $datas
+        ]);
+    }
+
+    // メール作成画面
+    public function mail_magazine() {
+
+        return view('admins.mail_magazine');
+    }
+    
+
+
 
     //QRコードリーダー
     public function qr_reader() {

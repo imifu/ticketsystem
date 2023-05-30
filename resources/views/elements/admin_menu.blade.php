@@ -109,6 +109,15 @@
           <a href="{{ route('admin.payments') }}" id="" class="nav-link"><i class="icon-coins"></i> <span>売上ログ</span></a>
         </li>
 
+        <li class="nav-item nav-item-submenu">
+          <a href="#" class="nav-link"><i class="icon-mail-read"></i> <span>メルマガ 管理</span></a>
+
+          <ul class="nav nav-group-sub" data-submenu-title="Themes">
+            <li class="nav-item"><a href="{{ route('admin.mail_magazine_search') }}" class="nav-link">メルマガ送信先の検索</a></li>
+            <li class="nav-item"><a href="{{ route('admin.mail_magazine') }}" class="nav-link">メルマガ新規作成</a></li>
+          </ul>
+        </li>
+
         @endif
 
         <li class="nav-item">
