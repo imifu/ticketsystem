@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
-use App\Models\Mail;
+use App\Models\MailTable;
 use App\Models\UserMail;
 
 use App\Mail\UserMailSend;
