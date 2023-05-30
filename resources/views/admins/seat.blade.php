@@ -163,6 +163,20 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row">
+                                <label class="col-form-label col-lg-3">コンビニ決済用 決済猶予期間（日数） <span class="text-danger">*</span></label>
+                                <div class="col-lg-2">
+
+                                    <div class="input-group">
+                                        <input type="number" name="deray_payment_date" class="form-control" required placeholder="50" value="{{ old('deray_payment_date' , !empty($data['deray_payment_date']) ? $data['deray_payment_date'] : null ) }}">
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-light">日</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
 
                             <div class="form-group row">
                                 <label class="col-lg-3 col-form-label">売り切れフラグON/OFF <span class="text-danger">*</span></label>
