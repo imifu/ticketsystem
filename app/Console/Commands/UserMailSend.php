@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Mail;
 use App\Models\UserMail;
@@ -38,6 +39,8 @@ class UserMailSend extends Command
      // 現在の時刻より過去のもので未送信フラグのものを取得し150件ずつ送信する
     public function handle()
     {
+
+        Log::info("メルマガ送信処理開始！");
 
         $send_to_num = 150;
         $now = date("Y-m-d H:i:s");
@@ -103,6 +106,8 @@ class UserMailSend extends Command
             }
 
         }
+
+        Log::info("メルマガ送信処理 無事終了！================================");
 
         return null;
     }
