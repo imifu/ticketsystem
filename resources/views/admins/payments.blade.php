@@ -78,7 +78,7 @@
                     <tbody>
                     @foreach ($datas as $data)
 
-                        @php $total_amount += $data->amount; @endphp
+                        @php $total_amount += ($data->amount + $data->commission); @endphp
 
                     <tr>
                         <td>
@@ -87,7 +87,7 @@
                         <td><span class="text-default font-weight-semibold">{{ $data->title }}</span></td>
                         <td><span class="text-default font-weight-semibold">{{ $data->ticket_name }}</span></td>
                         <td><span class="text-default font-weight-semibold">{{ config('payment_flg.'.$data->payment_flg) }}</span></td>
-                        <td><span class="text-default font-weight-semibold">{{ number_format($data->amount) }} 円</span></td>
+                        <td><span class="text-default font-weight-semibold">{{ number_format($data->amount + $data->commission) }} 円</span></td>
                         <td><span class="text-default font-weight-semibold">{{ $data->last_name." ".$data->first_name }}</span></td>
                         <td><span class="text-default font-weight-semibold">{{ $data->email }}</span></td>
                         <td><span class="text-default font-weight-semibold">{{ $data->payment_date }}</span></td>

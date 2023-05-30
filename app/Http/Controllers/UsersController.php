@@ -399,7 +399,7 @@ class UsersController extends Controller
 
 
             $payment_result = $stripe->charges->create([
-                'amount' => $ticket_data->amount * $data["ticket_buy_num"],
+                'amount' => ($ticket_data->amount * $data["ticket_buy_num"]) + $ticket_data->commission,
                 'currency' => 'jpy',
                 'source' => $data["stripeToken"],
                 'description' => $ticket_data->title.'|サイト会員ID：'.$user->id."| 購入チケットID：".$data["ticket_detail_id"]."|email：".$user->email."|tel：".$user->tel,
@@ -429,7 +429,7 @@ class UsersController extends Controller
                 $ticket_hash = str_replace("/", "_", $ticket_hash);
 
                 $user_ticket->qr_code = $ticket_hash;
-                $user_ticket->amount = $user_ticket->ticket_id;
+                $user_ticket->amount = $ticket_data->amount + $ticket_data->commission;
                 $user_ticket->valid_flg = 1;
                 $user_ticket->payment_flg = "1";
                 $user_ticket->seat = "未定";
@@ -441,7 +441,7 @@ class UsersController extends Controller
                 $payment_log->user_ticket_id = $user_ticket->id;
                 $payment_log->stripe_id = $payment_result["id"];
                 $payment_log->email = $user->email;
-                $payment_log->amount = $user_ticket->ticket_id;
+                $payment_log->amount = $ticket_data->amount + $ticket_data->commission;
                 $payment_log->payment_date = date("Y-m-d H:i:s");
                 $payment_log->save();
 
@@ -450,7 +450,7 @@ class UsersController extends Controller
                 $payment_data->ticket_id = $ticket_data->ticket_id;
                 $payment_data->ticket_detail_id = $ticket_data->ticket_detail_id;
                 $payment_data->payment_log_id = $payment_log->id;
-                $payment_data->amount = $user_ticket->ticket_id;
+                $payment_data->amount = $ticket_data->amount + $ticket_data->commission;
                 $payment_data->payment_date = date("Y-m-d H:i:s");
                 $payment_data->save();
 
