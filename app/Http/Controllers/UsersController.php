@@ -229,8 +229,8 @@ class UsersController extends Controller
 
         //     $intent = $stripe->paymentIntents->create(
         //         [
-        //             'amount' => $ticket_data->amount, 
-        //             'currency' => 'jpy', 
+        //             'amount' => $ticket_data->amount,
+        //             'currency' => 'jpy',
         //             'description' => $ticket_data->title,
         //             'payment_method_types' => ['card']
         //         ]
@@ -279,7 +279,7 @@ class UsersController extends Controller
         ->get()->count();
 
 
-        // 売り切れの場合  
+        // 売り切れの場合
         if($stock <= $sold_tickets) {
 
             // 売り切れフラグを立てる
@@ -295,7 +295,7 @@ class UsersController extends Controller
         if($stock < $sold_tickets + $data["buy_num"]) {
             return view('users.no_ticket', ['msg' => '該当のチケットは'.$data["buy_num"].'枚分の在庫がありません。']);
         }
-        
+
 
         return view('users.buy_ticket_conf', compact('data', 'ticket_data','intent', 'stripe'));
 
@@ -343,8 +343,8 @@ class UsersController extends Controller
 
         // $stripe->paymentIntents->create(
         //     [
-        //         'amount' => $ticket_data->amount, 
-        //         'currency' => 'jpy', 
+        //         'amount' => $ticket_data->amount,
+        //         'currency' => 'jpy',
         //         'description' => $ticket_data->title,
         //         'payment_method_types' => ['card']
         //     ]
@@ -366,7 +366,7 @@ class UsersController extends Controller
             ->where('del_flg', "=", 0)
             ->get()->count();
 
-            // 売り切れの場合  
+            // 売り切れの場合
             if($stock <= $sold_tickets) {
 
                 // 売り切れフラグを立てる
