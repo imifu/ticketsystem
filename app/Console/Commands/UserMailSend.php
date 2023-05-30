@@ -88,13 +88,14 @@ class UserMailSend extends Command
                 // メールアドレスが存在する場合のみ送信
                 if(!empty($send->email)) {
 
-                    // 会員向け チケット購入完了のメール送信
+                    // メール送信に使用する変数とメール送信処理そのもの
                     $params = $mail;
                     $params["email"] = $send->email;
                     $params["user_name"] = $send->last_name." ".$send->first_name;
                     $params["title"] = $mail->title;
                     $params["message"] = $mail->message;
 
+                    // メール送信処理
                     Mail::send(new UserMailSend($params));
 
                     // 送信済みに変更
