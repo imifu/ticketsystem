@@ -32,7 +32,7 @@ class UserMailSend extends Mailable
     {
         return $this->to($this->params["email"])
             ->subject($this->params["title"])
-            ->text('mails.user_buy_ticket')
+            ->text('mails.user_mail_send')
             ->with([
                 'params' => $this->params
             ]);
