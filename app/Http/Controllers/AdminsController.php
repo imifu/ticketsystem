@@ -355,6 +355,7 @@ class AdminsController extends Controller
               'ticket_name' => $req->ticket_name,
               'amount' => $req->amount,
               'commission' => $req->commission,
+              'deray_payment_date' => $req->deray_payment_date,
               'ticket_amount' => $req->ticket_amount,
               'sold_out_flg' => $req->sold_out_flg,
               'limit_sale' => $req->limit_sale,

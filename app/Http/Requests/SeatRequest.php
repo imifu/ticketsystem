@@ -28,6 +28,7 @@ class SeatRequest extends FormRequest
             'ticket_name'      => 'required', // 必須
             'amount'      => 'required', // 必須
             'commission'      => 'required', // 必須
+            'deray_payment_date' => 'required', // 必須
             'ticket_amount' => 'required', // 必須
             'sold_out_flg' => 'required', // 必須
         ];

@@ -159,7 +159,6 @@
                                             <button type="button" class="btn btn-light">円</button>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
 
