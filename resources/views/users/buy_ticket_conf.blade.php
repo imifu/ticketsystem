@@ -95,7 +95,18 @@
             <input type="hidden" name="ticket_amount" value="{{ $ticket_data->amount }}">
             <input type="hidden" name="ticket_buy_num" value="{{ $data['buy_num'] }}">
 
-            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button" data-key="{{ env('STRIPE_PUBLIC_KEY') }}" data-amount="{{ $ticket_data->amount * $data['buy_num'] }}" data-name="{{ $ticket_data->ticket_name }}" data-email="{{ $auth_user->email }}" data-label="決済" data-description="{{ $ticket_data->title }}" data-image="https://stripe.com/img/documentation/checkout/marketplace.png" data-locale="ja" data-currency="JPY">
+            <script src="https://checkout.stripe.com/checkout.js"
+            class="stripe-button"
+            data-key="{{ env('STRIPE_PUBLIC_KEY') }}"
+            data-amount="{{ ( $ticket_data->amount * $data['buy_num'] ) + $ticket_data['commission'] }}"
+            data-name="{{ $ticket_data->ticket_name }}"
+            data-email="{{ $auth_user->email }}"
+            data-label="決済"
+            data-description="{{ $ticket_data->title }}"
+            data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+            data-locale="ja"
+            data-currency="JPY">
+
             </script>
     </div>
 
