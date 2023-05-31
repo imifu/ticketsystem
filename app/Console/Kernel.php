@@ -7,6 +7,12 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
+
+    protected $commands = [  
+        UserMailSend::class // 追記  
+    ];
+
+
     /**
      * Define the application's command schedule.
      *
