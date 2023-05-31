@@ -12,7 +12,7 @@
 <div class="page-header">
     <div class="page-header-content header-elements-md-inline">
         <div class="page-title d-flex">
-            <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">メールマガジン作成</span></h4>
+            <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">メール詳細</span></h4>
             <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
         </div>
     </div>
@@ -30,11 +30,11 @@
             <!-- Form validation -->
             <div class="card">
                 <div class="card-header header-elements-inline">
-                    <h5 class="card-title">メールマガジン作成</h5>
+                    <h5 class="card-title">メール作成</h5>
                 </div>
 
                 <div class="card-body">
-                    <p class="mb-4">メールマガジンの内容</p>
+                    <p class="mb-4">メールデータの内容を登録してください。</p>
 
 
                     @if ($errors->any())
@@ -43,24 +43,26 @@
                     @endforeach
                     @endif
 
-                    <form action="{{ route('admin.mailSave') }}" enctype="multipart/form-data" method="POST">
+                    <form action="{{ route('admin.mailSave') }}" method="POST">
                         @csrf
                         <input type="hidden" name="id" value="{{ old('id' , !empty($data['id']) ? $data['id'] : null ) }}" />
                         <fieldset class="mb-3">
-                            <legend class="text-uppercase font-size-sm font-weight-bold">送信内容</legend>
+                            <legend class="text-uppercase font-size-sm font-weight-bold">データ内容</legend>
 
                             <!-- Basic text input -->
                             <div class="form-group row">
                                 <label class="col-form-label col-lg-3">件名 <span class="text-danger">*</span></label>
                                 <div class="col-lg-9">
-                                    <input type="text" name="title" class="form-control" required placeholder="件名をご入力ください" value="{{ old('title') ? old('title') : null }}{{ !empty($data['title']) ? $data['title'] : null }}">
+                                    <input type="text" name="title" class="form-control required" required placeholder="タイトルをご入力ください" value="{{ old('title' , !empty($data['title']) ? $data['title'] : null ) }}">
                                 </div>
                             </div>
+                            <!-- /basic text input -->
 
+                            <!-- Repeat password -->
                             <div class="form-group row">
-                                <label class="col-form-label col-lg-3">本文 <span class="text-danger">*</span></label>
+                                <label class="col-form-label col-lg-3">メール本文(HTML可) <span class="text-danger">*</span></label>
                                 <div class="col-lg-9">
-                                    <textarea name="message" id="ticket_explain" class="form-control" cols="30" rows="30" placeholder="本文をご入力ください">{{ old('ticket_explain') ? old('ticket_explain') : null }}{{ !empty($data['ticket_explain']) ? $data['ticket_explain'] : null }}</textarea>
+                                    <textarea name="message" id="message                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           " class="form-control" cols="30" rows="10">{{ old('id' , !empty($data['message']) ? $data['message'] : null ) }}</textarea>
                                 </div>
                             </div>
 
@@ -71,6 +73,9 @@
                                     <input type="text" id="timecale1_f" name="send_time" class="form-control required" required placeholder="表示開始時間" value="{{ old('show_from' , !empty($data['show_from']) ? $data['show_from'] : null ) }}">
                                 </div>
                             </div>
+
+                            <!-- /repeat password -->
+
 
 
                             <div class="d-flex justify-content-end align-items-center">
@@ -87,6 +92,7 @@
     </div>
     <!-- /content area -->
 
+
     <script>
         $(function() {
             $("#timecale1_f").datetimepicker({
@@ -94,5 +100,4 @@
             });
         });
     </script>
-
     @endsection

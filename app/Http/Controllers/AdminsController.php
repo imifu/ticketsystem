@@ -14,12 +14,19 @@ use App\Models\TicketDetail;
 use App\Models\UserTicket;
 use App\Models\PaymentData;
 use App\Models\PaymentLog;
+use App\Models\Mail;
+
+
+
+
 
 use App\Http\Requests\AdminRequest;
 use App\Http\Requests\NewsRequest;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\TicketRequest;
 use App\Http\Requests\SeatRequest;
+use App\Http\Requests\MailRequest;
+
 
 
 
@@ -675,7 +682,56 @@ class AdminsController extends Controller
 
         return view('admins.mail_magazine');
     }
-    
+
+    //メールデータの保存
+    public function mailSave(MailRequest $req) {
+
+        Mail::updateOrCreate(
+            ['id' => $req->id],
+            [
+                'title' => $req->title,
+                'message' => $req->message,
+                'send_fig' => '0',
+                'send_time' => $req->send_time,
+            ]
+        );
+        return redirect(route("admin.mails"));
+    }
+
+    //メールの一覧
+    public function mails()
+    {
+        //Mailテーブルから50件ずつデータを取得
+        $datas = Mail::orderBy("created_at", "DESC")->paginate(50);
+
+        return view('admins.mails', ['datas' => $datas]);
+    }
+
+    // メールの詳細/編集ページ
+    public function mailDetail($id = null)
+    {
+
+        $data = null;
+
+        if (!empty($id)) {
+            //Mailテーブルからidをキーにデータを取得
+            $data = Mail::find($id);
+        }
+
+        return view('admins.mailDetail', ['data' => $data]);
+    }
+
+    //メールの削除
+    public function mailDelete($id)
+    {
+        //Mailテーブルからidをキーにデータを取得
+        $data = Mail::find($id);
+
+        $data["del_flg"] = config("const.SAKUJYO_ZUMI");
+        $data->save();
+
+        return redirect(route("admin.mails"));
+    }
 
 
 

@@ -133,9 +133,13 @@ Route::middleware('auth:admins')->group(function(){
     Route::get('/kdMsAsj3U2b8/come_live/{str}', [App\Http\Controllers\AdminsController::class, 'come_live'])->name('admin.come_live_function');
 
 
+    Route::get('/kdMsAsj3U2b8/mails', [App\Http\Controllers\AdminsController::class, 'mails'])->name('admin.mails');
     Route::get('/kdMsAsj3U2b8/sendMail', [App\Http\Controllers\AdminsController::class, 'mail_magazine_search'])->name('admin.mail_magazine_search');
     Route::get('/kdMsAsj3U2b8/createMail', [App\Http\Controllers\AdminsController::class, 'mail_magazine'])->name('admin.mail_magazine');
-    
+    Route::get('/kdMsAsj3U2b8/mailDetail/{id}', [App\Http\Controllers\AdminsController::class, 'mailDetail'])->name('admin.mailDetail');
+    Route::get('/kdMsAsj3U2b8/mailDelete/{id}', [App\Http\Controllers\AdminsController::class, 'mailDelete'])->name('admin.mailDelete');
+    Route::post('/kdMsAsj3U2b8/mailSave', [App\Http\Controllers\AdminsController::class, 'mailSave'])->name('admin.mailSave');
+
 });
 
 
