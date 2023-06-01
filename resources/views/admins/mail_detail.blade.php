@@ -62,18 +62,16 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-lg-3">メール本文(HTML可) <span class="text-danger">*</span></label>
                                 <div class="col-lg-9">
-                                    <textarea name="message" id="message                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           " class="form-control" cols="30" rows="10">{{ old('id' , !empty($data['message']) ? $data['message'] : null ) }}</textarea>
+                                    <textarea name="message" id="message" class="form-control" cols="30" rows="10">{{ old('id' , !empty($data['message']) ? $data['message'] : null ) }}</textarea>
                                 </div>
                             </div>
-
 
                             <div class="form-group row">
                                 <label class="col-form-label col-lg-3">送信時間<span class="text-danger">*</span></label>
                                 <div class="col-lg-2">
-                                    <input type="text" id="timecale1_f" name="send_time" class="form-control required" required placeholder="表示開始時間" value="{{ old('show_from' , !empty($data['show_from']) ? $data['show_from'] : null ) }}">
+                                    <input type="text" id="send_time" name="send_time" class="form-control required" required placeholder="表示開始時間" value="{{ old('send_time' , !empty($data['send_time']) ? $data['send_time'] : null ) }}">
                                 </div>
                             </div>
-
                             <!-- /repeat password -->
 
 
@@ -95,7 +93,7 @@
 
     <script>
         $(function() {
-            $("#timecale1_f").datetimepicker({
+            $("#send_time").datetimepicker({
                 format: 'Y-m-d H:i:00'
             });
         });

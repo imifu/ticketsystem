@@ -14,7 +14,7 @@ use App\Models\TicketDetail;
 use App\Models\UserTicket;
 use App\Models\PaymentData;
 use App\Models\PaymentLog;
-use App\Models\Mail;
+use App\Models\MailTable;
 
 
 
@@ -686,7 +686,8 @@ class AdminsController extends Controller
     //メールデータの保存
     public function mailSave(MailRequest $req) {
 
-        Mail::updateOrCreate(
+
+        MailTable::updateOrCreate(
             ['id' => $req->id],
             [
                 'title' => $req->title,
@@ -702,30 +703,30 @@ class AdminsController extends Controller
     public function mails()
     {
         //Mailテーブルから50件ずつデータを取得
-        $datas = Mail::orderBy("created_at", "DESC")->paginate(50);
+        $datas = MailTable::orderBy("created_at", "DESC")->paginate(50);
 
         return view('admins.mails', ['datas' => $datas]);
     }
 
     // メールの詳細/編集ページ
-    public function mailDetail($id = null)
+    public function mail_detail($id = null)
     {
 
         $data = null;
 
         if (!empty($id)) {
             //Mailテーブルからidをキーにデータを取得
-            $data = Mail::find($id);
+            $data = MailTable::find($id);
         }
 
-        return view('admins.mailDetail', ['data' => $data]);
+        return view('admins.mail_detail', ['data' => $data]);
     }
 
     //メールの削除
-    public function mailDelete($id)
+    public function mail_delete($id)
     {
         //Mailテーブルからidをキーにデータを取得
-        $data = Mail::find($id);
+        $data = MailTable::find($id);
 
         $data["del_flg"] = config("const.SAKUJYO_ZUMI");
         $data->save();
