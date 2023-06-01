@@ -136,8 +136,8 @@ Route::middleware('auth:admins')->group(function(){
     Route::get('/kdMsAsj3U2b8/mails', [App\Http\Controllers\AdminsController::class, 'mails'])->name('admin.mails');
     Route::get('/kdMsAsj3U2b8/sendMail', [App\Http\Controllers\AdminsController::class, 'mail_magazine_search'])->name('admin.mail_magazine_search');
     Route::get('/kdMsAsj3U2b8/createMail', [App\Http\Controllers\AdminsController::class, 'mail_magazine'])->name('admin.mail_magazine');
-    Route::get('/kdMsAsj3U2b8/mail_Detail/{id}', [App\Http\Controllers\AdminsController::class, 'mail_detail'])->name('admin.mail_Detail');
-    Route::get('/kdMsAsj3U2b8/mail_Delete/{id}', [App\Http\Controllers\AdminsController::class, 'mail_delete'])->name('admin.mail_Delete');
+    Route::get('/kdMsAsj3U2b8/mail_detail/{id}', [App\Http\Controllers\AdminsController::class, 'mail_detail'])->name('admin.mail_detail');
+    Route::get('/kdMsAsj3U2b8/mail_delete/{id}', [App\Http\Controllers\AdminsController::class, 'mail_delete'])->name('admin.mail_delete');
     Route::post('/kdMsAsj3U2b8/mailSave', [App\Http\Controllers\AdminsController::class, 'mailSave'])->name('admin.mailSave');
 
 });
