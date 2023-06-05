@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
-class TicketDetailDelFlgScope implements Scope
+class UserMailDelFlgScope implements Scope
 {
     /**
      * 指定のEloquentクエリビルダにスコープを適用
@@ -18,6 +18,6 @@ class TicketDetailDelFlgScope implements Scope
     public function apply(Builder $builder, Model $model)
     {
 
-        $builder->where('ticket_details.del_flg', '=', "0");
+        $builder->where('user_mails.del_flg', '=', "0");
     }
 }

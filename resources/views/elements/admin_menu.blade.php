@@ -115,8 +115,9 @@
 
                     <ul class="nav nav-group-sub" data-submenu-title="Themes">
                         <li class="nav-item"><a href="{{ route('admin.mails') }}" class="nav-link">メルマガ一覧</a></li>
-                        <li class="nav-item"><a href="{{ route('admin.mail_magazine_search') }}" class="nav-link">メルマガ送信先の検索</a></li>
+                        <li class="nav-item"><a href="{{ route('admin.user_mails_view') }}" class="nav-link">メルマガ送信先一覧</a></li>
                         <li class="nav-item"><a href="{{ route('admin.mail_magazine') }}" class="nav-link">メルマガ新規作成</a></li>
+                        <li class="nav-item"><a href="{{ route('admin.mail_magazine_search') }}" class="nav-link">メルマガ送信先の検索</a></li>
                     </ul>
                 </li>
 

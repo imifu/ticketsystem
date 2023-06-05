@@ -15,7 +15,7 @@ use App\Models\UserTicket;
 use App\Models\PaymentData;
 use App\Models\PaymentLog;
 use App\Models\MailTable;
-
+use App\Models\UserMail;
 
 
 
@@ -26,7 +26,6 @@ use App\Http\Requests\UserRequest;
 use App\Http\Requests\TicketRequest;
 use App\Http\Requests\SeatRequest;
 use App\Http\Requests\MailRequest;
-
 
 
 
@@ -467,6 +466,7 @@ class AdminsController extends Controller
         ->select('payment_logs.*', 'user_tickets.*', 'tickets.*', 'users.*','ticket_details.*', 'payment_logs.id as payment_log_id', 'user_tickets.id as user_ticket_id')
 
         ->orderBy('payment_logs.updated_at', 'DESC')
+
         ->get();
 
         return view('admins.payments', ['datas' => $datas]);
@@ -669,7 +669,7 @@ class AdminsController extends Controller
     //メルマガ送信先検索ページ
     public function mail_magazine_search() {
 
-        $datas = User::where('del_flg', "=", '0')->orderBy("created_at", "DESC")->paginate(100);
+        $datas = User::where('del_flg', "=", '0')->orderBy("created_at", "DESC")->get();
 
         return view('admins.mail_magazine_search',
         [
@@ -734,6 +734,101 @@ class AdminsController extends Controller
         return redirect(route("admin.mails"));
     }
 
+    //送信するメールの内容の選択
+    public function mails_send_choose(Request $req)
+    {
+        $post = $req->all();
+
+        $user_ids = $post["user_mails"];
+
+        // var_dump($user_ids);
+        // exit;
+
+        //Mailテーブルから50件ずつデータを取得
+        $datas = MailTable::orderBy("created_at", "DESC")->get();
+
+        $user_ids = $post["user_mails"];
+
+        // 一回完全に削除
+        session()->forget('user_datas');
+
+        // 改めて追加する
+        session()->push('user_datas', $user_ids);
+
+        return view('admins.mails_send_choose', ['datas' => $datas]);
+    }
+
+
+    //選んだ会員と、メールを紐付け
+    public function user_mails(Request $req)
+    {
+        $post = $req->all();
+
+        // 選択したメールの主キーを取得する
+        $mail_id = $post["mail_id"];
+
+        // 先程sessionに保存したuser_datasを取得する
+        $user_datas = session('user_datas');
+
+        // セッションに保存されているデータの先頭（最新のもの）を取得する
+        $user_datas = $user_datas[0];
+
+        // $user_datasと$mail_idが存在する場合
+        if(!empty($user_datas) && !empty($mail_id))
+        {
+            // $user_dataas配列から一行ずつ$user_idに代入しながら取り出し
+            foreach($user_datas as $key => $user_id)
+            {
+                UserMail::updateOrCreate(
+                    ['id' => null],
+                    [
+                        'user_id' => $user_id,
+                        'mail_id' => $mail_id,
+                        'send_flg' => '0',
+                        'del_flg' => '0'
+                    ],
+                );
+            }
+        }
+
+
+        // user_mailsの中の一覧ページ作って、そこにリダイレクトするようにして。
+        return redirect(route("admin.user_mails_view"));
+
+    }
+
+
+    // 送信先一覧画面
+    public function userMailView() {
+
+        //SELECT * FROM user_mails INNER JOIN users ON users.id = user_mails.user_id
+        // INNER JOIN mails ON mails.id = user_mails.mail_id
+        // WHERE user_mails.del_flg = 0;
+
+        $datas = UserMail::select('*', 'user_mails.id AS user_mail_id')
+
+        ->join('users', 'users.id', '=', 'user_mails.user_id')
+        ->join('mails', 'mails.id', '=', 'user_mails.mail_id')
+
+        ->orderBy("user_mails.updated_at", "DESC")->paginate(100);
+
+        return view('admins.user_mails_all', ['datas' => $datas]);
+
+    }
+
+    //user_mailの削除
+    public function user_mail_delete($id)
+    {
+
+        //User_Mailテーブルからidをキーにデータを取得
+        $data = UserMail::find($id);
+
+        $data["del_flg"] = config("const.SAKUJYO_ZUMI");
+
+        $data->save();
+
+        return redirect(route("admin.user_mails_view"));
+    }
 
 
     //QRコードリーダー

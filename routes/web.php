@@ -132,7 +132,6 @@ Route::middleware('auth:admins')->group(function(){
     Route::get('/kdMsAsj3U2b8/come_live/', [App\Http\Controllers\AdminsController::class, 'come_live'])->name('admin.come_live');
     Route::get('/kdMsAsj3U2b8/come_live/{str}', [App\Http\Controllers\AdminsController::class, 'come_live'])->name('admin.come_live_function');
 
-
     Route::get('/kdMsAsj3U2b8/mails', [App\Http\Controllers\AdminsController::class, 'mails'])->name('admin.mails');
     Route::get('/kdMsAsj3U2b8/sendMail', [App\Http\Controllers\AdminsController::class, 'mail_magazine_search'])->name('admin.mail_magazine_search');
     Route::get('/kdMsAsj3U2b8/createMail', [App\Http\Controllers\AdminsController::class, 'mail_magazine'])->name('admin.mail_magazine');
@@ -140,6 +139,13 @@ Route::middleware('auth:admins')->group(function(){
     Route::get('/kdMsAsj3U2b8/mail_delete/{id}', [App\Http\Controllers\AdminsController::class, 'mail_delete'])->name('admin.mail_delete');
     Route::post('/kdMsAsj3U2b8/mailSave', [App\Http\Controllers\AdminsController::class, 'mailSave'])->name('admin.mailSave');
 
+    Route::post('/kdMsAsj3U2b8/mails_send_choose', [App\Http\Controllers\AdminsController::class, 'mails_send_choose'])->name('admin.mail_send_choose');
+    Route::post('/kdMsAsj3U2b8/user_mails', [App\Http\Controllers\AdminsController::class, 'user_mails'])->name('admin.user_mails');
+
+    // 送信先一覧画面
+    Route::get('/kdMsAsj3U2b8/userMails', [App\Http\Controllers\AdminsController::class, 'userMailView'])->name('admin.user_mails_view');
+    //user_mailの削除機能
+    Route::get('/kdMsAsj3U2b8/user_mail_delete/{id}', [App\Http\Controllers\AdminsController::class, 'user_mail_delete'])->name('admin.user_mail_delete');
 });
 
 
