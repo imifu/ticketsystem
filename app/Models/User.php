@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-use App\Models\Scopes\DelFlgScope;
+use App\Models\Scopes\UserDelFlgScope;
 
 
 class User extends Authenticatable
@@ -56,6 +56,6 @@ class User extends Authenticatable
     // DelFlgScopeを適用する
     protected static function booted()
     {
-        static::addGlobalScope(new DelFlgScope);
+        static::addGlobalScope(new UserDelFlgScope);
     }
 }

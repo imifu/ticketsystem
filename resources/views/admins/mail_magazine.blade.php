@@ -37,6 +37,7 @@
                     <p class="mb-4">メールマガジンの内容</p>
 
 
+                    
                     @if ($errors->any())
                     @foreach ($errors->all() as $error)
                     <div class="card-body alert alert-danger mb-10">{{$error}}</div>
@@ -68,7 +69,7 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-lg-3">送信時間<span class="text-danger">*</span></label>
                                 <div class="col-lg-2">
-                                    <input type="text" id="timecale1_f" name="send_time" class="form-control required" required placeholder="表示開始時間" value="{{ old('show_from' , !empty($data['show_from']) ? $data['show_from'] : null ) }}">
+                                    <input type="text" id="timecale1_f" name="send_time" class="form-control required" required placeholder="表示開始時間" value="{{ old('send_time' , !empty($data['send_time']) ? $data['send_time'] : null ) }}">
                                 </div>
                             </div>
 

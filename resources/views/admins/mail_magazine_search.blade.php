@@ -38,30 +38,46 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="{{ route('admin.users') }}" enctype="multipart/form-data" method="GET">
+                    <form action="{{ route('admin.mail_magazine_search') }}" enctype="multipart/form-data" method="GET">
                         @csrf
                         <fieldset class="mb-3">
                             <legend class="text-uppercase font-size-sm font-weight-bold">データ検索</legend>
 
+                            
                             <!-- Basic text input -->
                             <div class="form-group row">
                                 <label class="col-form-label col-lg-2">名前（曖昧検索）</label>
                                 <div class="col-lg-3">
-                                    <input type="text" name="name" class="form-control" placeholder="名前や名字" value="{{ !empty($param['name']) ? $param['name'] : null }}">
+                                    <input type="text" name="name" class="form-control" placeholder="名前や名字" value="{{ old('name', null) }}">
                                 </div>
                                 <label class="col-form-label col-lg-2">メールアドレス（曖昧検索）</label>
                                 <div class="col-lg-3">
-                                    <input type="text" name="email" class="form-control" placeholder="メールアドレス" value="{{ !empty($param['email']) ? $param['email'] : null }}">
+                                    <input type="text" name="email" class="form-control" placeholder="メールアドレス" value="{{ old('email', null) }}">
                                 </div>
                             </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-lg-2">チケット購入</label>
+                                <div class="col-lg-9">
+                                    <select name="ticket_detail_id" class="form-control">
+                                        <option value=""></option>
+                                        @if(!empty($selects))
+
+                                        @foreach($selects as $select)
+                                        <option value="{{ $select->ticket_detail_id }}">{{ $select->title }} - {{ $select->ticket_name }}</option>
+                                        @endforeach
+
+
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+
 
                             <div class="d-flex justify-content-end align-items-center">
                                 <button type="submit" class="btn btn-primary ml-3">検索 <i class="icon-checkmark-circle ml-2"></i></button>
                             </div>
                     </form>
-
-
-
                 </div>
             </div>
 

@@ -154,4 +154,3 @@ Route::middleware('auth:admins')->group(function(){
 Route::post('stripe_create_api', [App\Http\Controllers\ApiController::class, 'stripe_create_api'])->name('api.stripe_create_api');
 Route::post('stripe_cancel_api', [App\Http\Controllers\ApiController::class, 'stripe_cancel_api'])->name('api.stripe_cancel_api');
 Route::post('stripe_failed_api', [App\Http\Controllers\ApiController::class, 'stripe_failed_api'])->name('api.stripe_failed_api');
-

@@ -9,7 +9,7 @@ class Kernel extends ConsoleKernel
 {
 
     protected $commands = [  
-        UserMailSend::class // 追記  
+        // UserMailSend::class // 追記  
     ];
 
 

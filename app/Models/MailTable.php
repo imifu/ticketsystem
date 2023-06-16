@@ -19,7 +19,8 @@ class MailTable extends Model
         'title',
         'message',
         'send_flg',
-        'send_time'
+        'send_time',
+        'del_flg'
     ];
 
     protected $hidden = [];

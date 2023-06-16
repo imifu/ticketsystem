@@ -648,7 +648,7 @@ class AdminsController extends Controller
 
         $datas = UserTicket::where('user_tickets.del_flg', "=", '0')
 
-        ->select('*', 'user_tickets.id as user_ticket_id')
+        ->select('*', 'user_tickets.id as user_ticket_id','user_tickets')
 
         ->where('user_tickets.ticket_id', "=", $data['ticket_id'])
 
@@ -667,15 +667,58 @@ class AdminsController extends Controller
 
 
     //メルマガ送信先検索ページ
-    public function mail_magazine_search() {
+    public function mail_magazine_search(Request $req) {
 
-        $datas = User::where('del_flg', "=", '0')->orderBy("created_at", "DESC")->get();
+
+        $selects = Ticket::orderBy("tickets.created_at", "DESC")
+        ->select("*", "ticket_details.id AS ticket_detail_id")
+        ->join('ticket_details', 'ticket_details.ticket_id', '=', 'tickets.id')
+        ->where('tickets.del_flg', "=", '0')
+        ->where('ticket_details.del_flg', "=", '0')
+        ->get();
+
+        $param = $req->all();
+
+        // ユーザー検索処理開始
+        $datas = User::where('users.del_flg', "0")
+        ->select("*", "users.id AS user_group_id")
+        ->where('user_tickets.del_flg' , "0")
+        ->join('user_tickets', 'user_tickets.user_id', '=', 'users.id')
+        ->GroupBy("user_group_id")
+        ->orderBy("users.created_at", "DESC");
+
+        // 名前検索
+        if(!empty($req->name)) {
+            $datas->where(function ($query) use ($req) {
+                $query->where('first_name', 'LIKE', "%".$req->name."%")
+                    ->orWhere('last_name', 'LIKE', "%".$req->name."%");
+            });
+        }
+
+        // メール検索
+        if(!empty($req->email)) {
+            $datas->where(function ($query) use ($req) {
+                $query->where('users.email', 'LIKE', "%".$req->email."%");
+            });
+        }
+
+        // チケット購入検索
+        if(!empty($req->ticket_detail_id)) {
+            $datas->where(function ($query) use ($req) {
+                $query->where('user_tickets.ticket_detail_id', '=', $req->ticket_detail_id);
+            });
+        }
+
+        $datas = $datas->get();
 
         return view('admins.mail_magazine_search',
         [
+            'selects' => $selects,
             'datas' => $datas
         ]);
     }
+
+
 
     // メール作成画面
     public function mail_magazine() {
@@ -686,14 +729,14 @@ class AdminsController extends Controller
     //メールデータの保存
     public function mailSave(MailRequest $req) {
 
-
         MailTable::updateOrCreate(
             ['id' => $req->id],
             [
                 'title' => $req->title,
                 'message' => $req->message,
-                'send_fig' => '0',
                 'send_time' => $req->send_time,
+                'send_fig' => '0',
+                'del_flg' => '0',
             ]
         );
         return redirect(route("admin.mails"));

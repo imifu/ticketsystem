@@ -14,7 +14,7 @@ use App\Models\UserMail;
 use App\Mail\UserMailSend;
 
 
-class UserMailSend extends Command
+class UserMailSendCron extends Command
 {
     /**
      * The name and signature of the console command.
